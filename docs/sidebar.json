@@ -1,5 +1,8 @@
 {
   "FLayout": {
     "Overview": "/"
+  },
+  "Extensions": {
+    "Bokeh Visualization": "bokeh"
   }
 }

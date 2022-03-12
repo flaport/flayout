@@ -62,8 +62,6 @@ docker:
 test:
   stage: test
   image: $CI_REGISTRY_IMAGE:$DOCKERTAG
-  tags:
-    - sensors-da
   script:
     - nbdev_test_nbs | tee nbdev_test_nbs.log
   artifacts:
@@ -86,7 +84,7 @@ docs:
   image: $CI_REGISTRY_IMAGE:$DOCKERTAG
   script:
     - nbdev_build_lib
-    - papermill source/00_index.ipynb source/00_index.ipynb -k python3
+    - papermill source/00_index.ipynb source/00_index.ipynb -k python3 --cwd source
     - nbdev_build_docs
   artifacts:
     paths:

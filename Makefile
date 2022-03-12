@@ -19,7 +19,7 @@ serve:
 
 .PHONY: docs
 docs:
-	papermill source/00_index.ipynb source/00_index.ipynb -k fl
+	papermill source/00_index.ipynb source/00_index.ipynb -k fl --cwd source
 	nbdev_build_docs
 
 run:

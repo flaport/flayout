@@ -11,6 +11,7 @@
   - [Overview](https://flaport.gitlab.io/flayout//)
 - **Extensions**
   - [Bokeh Visualization](https://flaport.gitlab.io/flayout/bokeh)
+  - [Notebook](https://flaport.gitlab.io/flayout/notebook)
 
 
 

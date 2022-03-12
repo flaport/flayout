@@ -6,7 +6,7 @@ from __future__ import annotations
 
 __all__ = ['ALPHA', 'RED', 'GREEN', 'BLUE', 'C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'get_lyp_path',
            'LayerProperty', 'LayerProperties', 'read_lyp', 'get_lyp', 'new_plot', 'adjust_plot', 'draw_polys',
-           'draw_poly', 'draw_path', 'draw_vector', 'draw_box']
+           'draw_poly', 'draw_path', 'draw_point', 'draw_vector', 'draw_box', 'draw_cell', 'draw_layout']
 
 # Internal Cell
 #nbdev_comment from __future__ import annotations
@@ -349,6 +349,42 @@ def draw_path(
     )
 
 # Cell
+def draw_point(
+    plot: bp.Figure,
+    p: Union[pya.Point, pya.DPoint],
+    layer=(0, 0),
+    fill_color=None,
+    line_color=None,
+    fill_alpha=ALPHA,
+):
+    """draw a point with bokeh
+
+    Args:
+        plot: the plot to draw the point in
+        p: the point to draw
+
+    Returns:
+        the (inplace) modified plot containing the point
+    """
+    if isinstance(p, pya.Point):
+        p = p.to_dtype()
+    v = pya.DVector(1.0, 1.0)
+    box = pya.DBox(p - v, p + v)
+    plot = adjust_plot(plot, box)
+    *_, w, h = _get_range(box)
+    radius = max(w, h) / 30
+    lyp = get_lyp(layer)
+    plot.circle(
+        p.x,
+        p.y,
+        fill_alpha=fill_alpha,
+        fill_color=fill_color or lyp["fill-color"],
+        line_color=line_color or ["frame-color"],
+        radius=radius,
+    )
+    return plot
+
+# Cell
 def draw_vector(
     plot: bp.Figure,
     v: Union[pya.Vector, pya.DVector],
@@ -427,3 +463,67 @@ def draw_box(
     return draw_poly(
         plot, poly, fill_alpha=fill_alpha, fill_color=fill_color, line_color=line_color
     )
+
+# Cell
+def _draw_shapes(plot, shapes, layer=(0, 0)):
+    """draw shapes with bokeh
+
+    Args:
+        plot: the plot to draw the shape in
+        shapes: the shapes to draw
+
+    Returns:
+        the (inplace) modified plot containing the shape
+    """
+    polys = []
+    for shape in shapes:
+        if shape.is_box():
+            polys.append(_box_to_poly(shape.dbbox()))
+        elif shape.is_path():
+            polys.append(shape.dpath.polygon())
+        elif shape.is_polygon():
+            polys.append(shape.dpolygon)
+        elif shape.is_simple_polygon():
+            polys.append(shape.dsimple_polygon)
+    #for poly in polys:
+    #    plot = draw_poly(plot, poly, layer=layer)
+    return draw_polys(plot, polys, layer=layer)
+
+def draw_cell(plot, cell, draw_bbox=True):
+    """draw a cell with bokeh
+
+    Args:
+        plot: the plot to draw the cell in
+        cell: the cell to draw
+
+    Returns:
+        the (inplace) modified plot containing the cell
+    """
+    layout = pya.Layout()
+    new_cell = layout.create_cell(cell.name)
+    new_cell.copy_tree(cell)
+
+    cell = new_cell
+    cell = cell.flatten(-1, True)
+    box = cell.dbbox()
+    plot = adjust_plot(plot, box, max_dim=500)
+    for lr in layout.layer_infos():
+        shapes = [*cell.shapes(layout.layer(lr)).each()]
+        plot = _draw_shapes(plot, shapes, layer=(lr.layer, lr.datatype))
+    if draw_bbox:
+        draw_box(plot, box)
+    return plot
+
+# Cell
+def draw_layout(plot, layout):
+    """draw a layout with bokeh
+
+    Args:
+        plot: the plot to draw the layout in
+        layout: the layout to draw
+
+    Returns:
+        the (inplace) modified plot with containing the layout
+    """
+    plots = bp.Column(*[draw_cell(plot, cell) for cell in layout.top_cells()])
+    return plots

@@ -26,10 +26,15 @@ index = {"ALPHA": "01_bokeh.ipynb",
          "draw_polys": "01_bokeh.ipynb",
          "draw_poly": "01_bokeh.ipynb",
          "draw_path": "01_bokeh.ipynb",
+         "draw_point": "01_bokeh.ipynb",
          "draw_vector": "01_bokeh.ipynb",
-         "draw_box": "01_bokeh.ipynb"}
+         "draw_box": "01_bokeh.ipynb",
+         "draw_cell": "01_bokeh.ipynb",
+         "draw_layout": "01_bokeh.ipynb",
+         "html_repr": "02_notebook.ipynb"}
 
-modules = ["ext/bokeh.py"]
+modules = ["ext/bokeh.py",
+           "ext/notebook.py"]
 
 doc_url = "https://flaport.gitlab.io/flaport/flayout/"
 

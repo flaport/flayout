@@ -3,6 +3,7 @@
     "Overview": "/"
   },
   "Extensions": {
-    "Bokeh Visualization": "bokeh"
+    "Bokeh Visualization": "bokeh",
+    "Notebook": "notebook"
   }
 }

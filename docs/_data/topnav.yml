@@ -1,0 +1,10 @@
+topnav:
+- title: Topnav
+  items:
+    - title: gitlab
+      external_url: https://gitlab.com/flaport/flayout/
+
+#Topnav dropdowns
+topnav_dropdowns:
+- title: Topnav dropdowns
+  folders:

@@ -63,6 +63,7 @@ test:
   stage: test
   image: $CI_REGISTRY_IMAGE:$DOCKERTAG
   script:
+    - cd source
     - nbdev_test_nbs | tee nbdev_test_nbs.log
   artifacts:
     paths:
@@ -72,7 +73,7 @@ run:
   stage: test
   image: $CI_REGISTRY_IMAGE:$DOCKERTAG
   script:
-    - find . -name "*.ipynb" | grep -v '.ipynb_checkpoints' | xargs -I {} papermill {} {} -k python3
+    - find source -name "*.ipynb" | grep -v '.ipynb_checkpoints' | xargs -I {} papermill {} {} -k python3 --cwd source
   artifacts:
     paths:
       - "*.ipynb"

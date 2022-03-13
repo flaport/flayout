@@ -30,11 +30,37 @@ index = {"ALPHA": "01_bokeh.ipynb",
          "draw_vector": "01_bokeh.ipynb",
          "draw_box": "01_bokeh.ipynb",
          "draw_cell": "01_bokeh.ipynb",
+         "draw_inst": "01_bokeh.ipynb",
          "draw_layout": "01_bokeh.ipynb",
-         "html_repr": "02_notebook.ipynb"}
+         "html_repr": "02_notebook.ipynb",
+         "DoesNotExist": "03_cell.ipynb",
+         "SUPPORTED": "03_cell.ipynb",
+         "MAX_DEPTH": "03_cell.ipynb",
+         "ON_SAME_NAME_DOC": "03_cell.ipynb",
+         "Reference": "03_cell.ipynb",
+         "LibReference": "03_cell.ipynb",
+         "PCellReference": "03_cell.ipynb",
+         "PCellLibReference": "03_cell.ipynb",
+         "reference": "03_cell.ipynb",
+         "copy_tree": "03_cell.ipynb",
+         "add_cells_to_layout": "03_cell.ipynb",
+         "add_pcells_to_layout": "03_cell.ipynb",
+         "add_lib_pcell_to_layout": "03_cell.ipynb",
+         "add_lib_cell_to_layout": "03_cell.ipynb",
+         "add_cell_to_layout": "03_cell.ipynb",
+         "Point": "04_factories.ipynb",
+         "Points": "04_factories.ipynb",
+         "Shape": "04_factories.ipynb",
+         "layer": "04_factories.ipynb",
+         "point": "04_factories.ipynb",
+         "vector": "04_factories.ipynb",
+         "polygon": "04_factories.ipynb",
+         "path": "04_factories.ipynb"}
 
-modules = ["ext/bokeh.py",
-           "ext/notebook.py"]
+modules = ["bokeh.py",
+           "notebook.py",
+           "cell.py",
+           "factories.py"]
 
 doc_url = "https://flaport.gitlab.io/flaport/flayout/"
 

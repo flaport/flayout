@@ -3,7 +3,7 @@
 __all__ = ['html_repr']
 
 # Internal Cell
-import flayout.ext.bokeh as flbk
+import flayout.bokeh as flbk
 import pya
 from bokeh.embed import file_html
 from bokeh.io import output_notebook
@@ -35,4 +35,5 @@ html_repr(flbk.draw_path, [pya.Path, pya.DPath])
 html_repr(flbk.draw_poly, [pya.DSimplePolygon, pya.SimplePolygon, pya.DPolygon, pya.Polygon])
 html_repr(flbk.draw_box, [pya.Box, pya.DBox])
 html_repr(flbk.draw_cell, [pya.Cell])
+html_repr(flbk.draw_inst, [pya.Instance])
 html_repr(flbk.draw_layout, [pya.Layout])

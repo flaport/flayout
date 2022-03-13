@@ -6,7 +6,7 @@ from __future__ import annotations
 
 __all__ = ['ALPHA', 'RED', 'GREEN', 'BLUE', 'C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'get_lyp_path',
            'LayerProperty', 'LayerProperties', 'read_lyp', 'get_lyp', 'new_plot', 'adjust_plot', 'draw_polys',
-           'draw_poly', 'draw_path', 'draw_point', 'draw_vector', 'draw_box', 'draw_cell', 'draw_layout']
+           'draw_poly', 'draw_path', 'draw_point', 'draw_vector', 'draw_box', 'draw_cell', 'draw_inst', 'draw_layout']
 
 # Internal Cell
 #nbdev_comment from __future__ import annotations
@@ -512,6 +512,29 @@ def draw_cell(plot, cell, draw_bbox=True):
         plot = _draw_shapes(plot, shapes, layer=(lr.layer, lr.datatype))
     if draw_bbox:
         draw_box(plot, box)
+    return plot
+
+# Cell
+def draw_inst(plot, inst, draw_bbox=True, draw_arrow=True):
+    """draw a instance with bokeh
+
+    Args:
+        plot: the plot to draw the instance in
+        inst: the instance to draw
+
+    Returns:
+        the (inplace) modified plot with containing the instance
+    """
+    _layout = pya.Layout()
+    _cell = _layout.create_cell(inst.cell.name)
+    _cell.copy_tree(inst.cell)
+    _refcell = _layout.create_cell(f"ref_{inst.cell.name}")
+    _refcell.insert(pya.CellInstArray(_layout.cell_by_name(inst.cell.name), inst.trans))
+
+    plot = new_plot(_refcell.dbbox() + pya.Point(0, 0))
+    plot = draw_vector(plot, inst.trans.disp)
+    plot = draw_cell(plot, _refcell)
+    plot = adjust_plot(plot, _refcell.dbbox() + pya.Point(0, 0))
     return plot
 
 # Cell

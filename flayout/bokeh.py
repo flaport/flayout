@@ -20,8 +20,10 @@ import bokeh.io as bio
 import bokeh.models as bm
 import bokeh.plotting as bp
 import numpy as np
+import pkg_resources
 import pya
 from lxml import etree
+from types import SimpleNamespace
 
 # Cell
 ALPHA = 0.3
@@ -43,28 +45,18 @@ C9 = '#17becf'
 LayerProperty = Dict[str, Union[str, bool]]
 LayerProperties = Dict[Tuple[int, int], LayerProperty]
 
-def get_lyp_path(path: Optional[str] = None, default_dir: Optional[str] = None):
-    if default_dir is None:
-        default_dir = os.path.expanduser("~/.klayout")
-    if path == "":
-        path = "."
+def get_lyp_path(path: Optional[str] = None):
+    # first, let's try "~/.klayout"
     if path is None:
         path = ""
-    path = os.path.expanduser(path)
-    if os.path.isfile(path):
-        return os.path.abspath(path)
-    elif path and os.path.isdir(path):
-        return get_lyp_path(path=None, default_dir=path)
-
-    possible_paths = list(glob.glob(f"{default_dir}/**/*.lyp", recursive=True))
-    if not possible_paths:
-        raise ValueError("Could not find an lyp file in ~/.klayout.")
-    selected_paths = [p for p in possible_paths if p.endswith(path)]
-    if selected_paths:
-        path = selected_paths[0]
-    else:
-        path = possible_paths[0]
-    return os.path.abspath(path)
+    path = os.path.abspath(os.path.expanduser(path))
+    if os.path.isdir(path):
+        possible_paths = glob.glob(f"{path}/*.lyp")
+        if not possible_paths:
+            path = get_lyp_path(pkg_resources.resource_filename("flayout", "layers.lyp"))
+        else:
+            path = possible_paths[0]
+    return path
 
 # Cell
 @lru_cache
@@ -90,16 +82,24 @@ def read_lyp(path: Optional[str] = None) -> LayerProperties:
     }
     for properties in root.iter("properties"):
         name = properties.find("name")
-        name, layerstr = name.text.split("(")
-        name = name.strip()
-        lr, dt = layerstr.split("/")
-        lr, dt = int(lr), int(dt.split(")")[0])
-        parsed[lr, dt] = {
-            "name": name,
-            "frame-color": properties.find("frame-color").text,
-            "fill-color": properties.find("fill-color").text,
-            "visible": bool(properties.find("visible").text),
-        }
+        if name is not None:
+            name, *_ = name.text.split("(")
+            name = name.strip()
+        else:
+            name = ""
+
+        layerstr = properties.find("source")
+        if layerstr is not None:
+            layerstr, *_ = layerstr.text.split("@")
+            lr, dt = layerstr.strip().split("/")
+            lr, dt = int(lr), int(dt)
+            parsed[lr, dt] = {
+                "name": name,
+                "frame-color": properties.find("frame-color").text,
+                "fill-color": properties.find("fill-color").text,
+                "visible": bool(properties.find("visible").text),
+            }
+
     return parsed
 
 # Cell

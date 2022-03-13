@@ -1,4 +1,3 @@
 FROM condaforge/mambaforge
 ADD . /flayout
-RUN pip install -e /flayout[dev]
-RUN rm -rf /flayout
+RUN pip install /flayout[dev]

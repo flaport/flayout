@@ -23,7 +23,7 @@ docs:
 	nbdev_build_docs
 
 run:
-	find . -name "*.ipynb" | grep -v .ipynb_checkpoints | xargs -I {} papermill {} {} --kernel fl
+	find . -name "*.ipynb" | grep -v .ipynb_checkpoints | xargs -I {} papermill {} {} --kernel fl --cwd source
 
 test:
 	nbdev_test_nbs

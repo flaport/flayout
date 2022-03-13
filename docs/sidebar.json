@@ -1,6 +1,9 @@
 {
   "FLayout": {
-    "Overview": "/"
+    "Overview": "index",
+    "Factories": "factories",
+    "Cell Utilities": "cell",
+    "Read &amp; Write": "io"
   },
   "Extensions": {
     "Bokeh Visualization": "bokeh",

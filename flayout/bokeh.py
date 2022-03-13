@@ -125,9 +125,7 @@ def get_lyp(
     return lyp
 
 # Internal Cell
-def _get_range(
-    box: Union[pya.Box, pya.DBox]
-) -> Tuple[float, float, float, float, float, float]:
+def _get_range(box: Union[pya.Box, pya.DBox]) -> Tuple[float, float, float, float, float, float]:
     """Get the plotting bbox for a klayout box
 
     Args:

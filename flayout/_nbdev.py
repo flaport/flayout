@@ -57,13 +57,15 @@ index = {"ALPHA": "01_bokeh.ipynb",
          "polygon": "04_factories.ipynb",
          "path": "04_factories.ipynb",
          "read": "05_io.ipynb",
-         "save": "05_io.ipynb"}
+         "save": "05_io.ipynb",
+         "pcell": "06_pcell.ipynb"}
 
 modules = ["bokeh.py",
            "notebook.py",
            "cell.py",
            "factories.py",
-           "io.py"]
+           "io.py",
+           "pcell.py"]
 
 doc_url = "https://flaport.gitlab.io/flaport/flayout/"
 

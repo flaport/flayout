@@ -3,6 +3,7 @@
     "Overview": "index",
     "Factories": "factories",
     "Cell Utilities": "cell",
+    "PCell Decorator": "pcell",
     "Read &amp; Write": "io"
   },
   "Extensions": {

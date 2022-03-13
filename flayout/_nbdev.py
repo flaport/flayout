@@ -4,16 +4,16 @@ __all__ = ["index", "modules", "custom_doc_links", "git_url"]
 
 index = {"__version__": "00_index.ipynb",
          "__author__": "00_index.ipynb",
-         "Point": "01_factories.ipynb",
-         "Points": "01_factories.ipynb",
-         "Shape": "01_factories.ipynb",
          "layer": "01_factories.ipynb",
          "point": "01_factories.ipynb",
          "vector": "01_factories.ipynb",
          "box": "01_factories.ipynb",
          "polygon": "01_factories.ipynb",
+         "Point": "01_factories.ipynb",
+         "Points": "01_factories.ipynb",
          "path": "01_factories.ipynb",
          "cell": "01_factories.ipynb",
+         "Shape": "01_factories.ipynb",
          "transform": "01_factories.ipynb",
          "layout": "01_factories.ipynb",
          "library": "01_factories.ipynb",
@@ -63,7 +63,10 @@ index = {"__version__": "00_index.ipynb",
          "draw_inst": "91_bokeh.ipynb",
          "draw_layout": "91_bokeh.ipynb",
          "html_repr": "92_notebook.ipynb",
-         "auto_expand": "92_notebook.ipynb"}
+         "auto_expand": "92_notebook.ipynb",
+         "rectangle": "99_example_lib.ipynb",
+         "square": "99_example_lib.ipynb",
+         "example_lib": "99_example_lib.ipynb"}
 
 modules = ["__init__.py",
            "factories.py",
@@ -71,7 +74,8 @@ modules = ["__init__.py",
            "pcell.py",
            "io.py",
            "bokeh.py",
-           "notebook.py"]
+           "notebook.py",
+           "example_lib.py"]
 
 doc_url = "https://flaport.gitlab.io/flaport/flayout/"
 

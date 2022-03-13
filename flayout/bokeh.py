@@ -23,7 +23,6 @@ import numpy as np
 import pkg_resources
 import pya
 from lxml import etree
-from types import SimpleNamespace
 
 # Cell
 ALPHA = 0.3

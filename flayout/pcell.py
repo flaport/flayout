@@ -3,8 +3,9 @@
 __all__ = ['pcell']
 
 # Cell
-from typing import Callable
 from inspect import Parameter, Signature, signature
+from typing import Callable
+
 import pya
 
 # Internal Cell

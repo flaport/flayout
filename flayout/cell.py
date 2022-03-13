@@ -4,11 +4,11 @@ __all__ = ['reference', 'copy_tree', 'add_cells_to_layout', 'add_pcells_to_layou
 
 # Internal Cell
 import sys
-from typing import Any, Dict, List, NamedTuple, Optional, Tuple, Union, overload
+from typing import Any, Dict, List, NamedTuple, Union
 
 import flayout as fl
-import numpy as np
 import pya
+
 
 class DoesNotExist:
     pass

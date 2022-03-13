@@ -9,5 +9,8 @@
   "Extensions": {
     "Bokeh Visualization": "bokeh",
     "Notebook": "notebook"
+  },
+  "Libraries": {
+    "Example Library": "example_lib"
   }
 }

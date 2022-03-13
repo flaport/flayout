@@ -5,7 +5,6 @@ __all__ = ['rectangle', 'square', 'gf_pcells', 'example_lib']
 # Internal Cell
 import pya
 import flayout as fl
-print(fl.__file__)
 
 # Cell
 @fl.pcell

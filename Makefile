@@ -40,11 +40,11 @@ pypi: dist
 dist: clean
 	python -m build --sdist --wheel
     
-make install: clean lib
+install: clean lib
 	python -m pip uninstall -y flayout
 	python -m pip install --upgrade -e .
     
-make user_install: clean lib
+user_install: clean lib
 	python -m pip uninstall -y flayout
 	python -m pip install --user --upgrade .
 

@@ -5,7 +5,7 @@ __all__ = ['pcell']
 # Internal Cell
 from functools import partial
 from inspect import Parameter, Signature, signature
-from typing import Callable
+from typing import Callable, Optional
 
 import pya
 from .cell import copy_tree
@@ -19,18 +19,22 @@ def _klayout_type(param: Parameter):
         "TypeInt": pya.PCellDeclarationHelper.TypeInt,
         "int": pya.PCellDeclarationHelper.TypeInt,
         int: pya.PCellDeclarationHelper.TypeInt,
+        Optional[int]: pya.PCellDeclarationHelper.TypeInt,
         pya.PCellDeclarationHelper.TypeDouble: pya.PCellDeclarationHelper.TypeDouble,
         "TypeDouble": pya.PCellDeclarationHelper.TypeDouble,
         "float": pya.PCellDeclarationHelper.TypeDouble,
         float: pya.PCellDeclarationHelper.TypeDouble,
+        Optional[float]: pya.PCellDeclarationHelper.TypeDouble,
         pya.PCellDeclarationHelper.TypeString: pya.PCellDeclarationHelper.TypeString,
         "TypeString": pya.PCellDeclarationHelper.TypeString,
         "str": pya.PCellDeclarationHelper.TypeString,
         str: pya.PCellDeclarationHelper.TypeString,
+        Optional[str]: pya.PCellDeclarationHelper.TypeString,
         pya.PCellDeclarationHelper.TypeBoolean: pya.PCellDeclarationHelper.TypeBoolean,
         "TypeBoolean": pya.PCellDeclarationHelper.TypeBoolean,
         "bool": pya.PCellDeclarationHelper.TypeBoolean,
         bool: pya.PCellDeclarationHelper.TypeBoolean,
+        Optional[bool]: pya.PCellDeclarationHelper.TypeBoolean,
         pya.PCellDeclarationHelper.TypeLayer: pya.PCellDeclarationHelper.TypeLayer,
         "TypeLayer": pya.PCellDeclarationHelper.TypeLayer,
         "LayerInfo": pya.PCellDeclarationHelper.TypeLayer,
@@ -43,6 +47,7 @@ def _klayout_type(param: Parameter):
         "TypeList": pya.PCellDeclarationHelper.TypeList,
         "list": pya.PCellDeclarationHelper.TypeList,
         list: pya.PCellDeclarationHelper.TypeList,
+        Optional[list]: pya.PCellDeclarationHelper.TypeList,
     }
     try:
         annotation = param.annotation
@@ -125,11 +130,17 @@ def _validate_parameter(name, param):
         raise ValueError(
             f"Cannot create pcell from functions with positional arguments. Please use keyword arguments."
         )
+    annotation = _python_type(_klayout_type(_python_type(param)))
+    default = param.default
+    try:
+        default = annotation(default)
+    except Exception:
+        pass
     return Parameter(
         name,
         kind=Parameter.KEYWORD_ONLY,
-        default=param.default,
-        annotation=_python_type(_klayout_type(_python_type(param))),
+        default=default,
+        annotation=annotation,
     )
 
 def _pcell_parameters(func: Callable, on_error="raise"):
@@ -168,28 +179,36 @@ def pcell(func=None, on_error="raise"):
 
     def init(self):
         pya.PCellDeclarationHelper.__init__(self)
+        self._params = {}
         for name, param in params.items():
             self.param(
-                name,
-                _klayout_type(param),
-                name.replace("_", " "),
+                name=name,
+                value_type=_klayout_type(param),
+                description=name.replace("_", " "),
                 default=param.default,
             )
+            self._params[name] = param
         self.func = func
-        self.names = tuple(params)
 
     def call(self, **kwargs):
-        name = kwargs.pop("name", func.__name__)
-        keys = signature(self.func).parameters
-        if name in keys:
-            obj = self.func(**kwargs)
-        else:
+        name = kwargs.pop("name", (self.name or func.__name__))
+        try:
             obj = self.func(**kwargs, name=name)
+        except TypeError:
+            obj = self.func(**kwargs)
         obj.name = name
         return obj
 
     def produce_impl(self):
-        kwargs = {name: getattr(self, name) for name in self.names}
+        kwargs = {}
+        for name, param in self._params.items():
+            v = getattr(self, name)
+            if v is None:
+                v = param.default
+            if v is Parameter.empty:
+                continue
+            kwargs[name] = v
+        print(kwargs)
         cell = self(**kwargs)
         copy_tree(cell, self.cell, on_same_name="replace")
 

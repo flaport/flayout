@@ -39,14 +39,18 @@ pypi: dist
 
 dist: clean
 	python -m build --sdist --wheel
-    
-install: clean lib
+
+install: clean lib clean
 	python -m pip uninstall -y flayout
 	python -m pip install --upgrade -e .
-    
-user_install: clean lib
+
+user_install: clean lib clean
 	python -m pip uninstall -y flayout
 	python -m pip install --user --upgrade .
+
+fast_user_install: lib
+	python -m pip uninstall -y flayout
+	python -m pip install --user --upgrade --no-deps .
 
 clean:
 	nbdev_clean_nbs

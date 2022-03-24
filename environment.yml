@@ -1,0 +1,25 @@
+name: fl
+channels:
+  - conda-forge
+  - fastai
+  - flaport
+dependencies:
+  - python=3.8
+  - pip
+  - klayout
+  - klayout-gui
+  - black
+  - bokeh
+  - bump2version
+  - ipykernel
+  - isort
+  - lxml
+  - nbdev
+  - nbstripout
+  - numpy
+  - papermill
+  - pre-commit
+  - pytest
+  - pyyaml
+  - tqdm
+prefix: /home/flaport/.anaconda/envs/mb

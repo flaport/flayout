@@ -31,16 +31,14 @@ def square(
 
 # Cell
 gf_pcells = []
-try:
-    import gdsfactory.components as gfc
-except ImportError:
-    gfc = None
 
-if gfc is not None:
-    gf_pcells += [
-        mzi := fl.pcell(gfc.mzi, on_error="ignore"),
-        bend_euler := fl.pcell(gfc.bend_euler, on_error="ignore")
-    ]
+import flayout as fl
+import gdsfactory.components as gfc
+
+gf_pcells += [
+    mzi := fl.pcell(gfc.mzi, on_error="ignore"),
+    bend_euler := fl.pcell(gfc.bend_euler, on_error="ignore")
+]
 
 # Cell
 example_lib = fl.library(

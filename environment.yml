@@ -4,6 +4,7 @@ channels:
   - fastai
   - flaport
 dependencies:
+  - build
   - python=3.8
   - pip
   - klayout
@@ -14,7 +15,7 @@ dependencies:
   - ipykernel
   - isort
   - lxml
-  - nbdev
+  - nbdev<2
   - nbstripout
   - numpy
   - papermill
@@ -22,4 +23,5 @@ dependencies:
   - pytest
   - pyyaml
   - tqdm
+  - gdsfactory # optional dependency
 prefix: /home/flaport/.anaconda/envs/mb

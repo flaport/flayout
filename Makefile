@@ -19,11 +19,11 @@ serve:
 
 .PHONY: docs
 docs:
-	papermill source/00_index.ipynb source/00_index.ipynb -k fl --cwd source
+	papermill index.ipynb index.ipynb --cwd . --kernel fl
 	nbdev_build_docs
 
 run:
-	find . -name "*.ipynb" | grep -v .ipynb_checkpoints | xargs -I {} papermill {} {} --kernel fl --cwd source
+	find source -name "*.ipynb" | grep -v .ipynb_checkpoints | xargs -I {} papermill {} {} --cwd source --kernel fl
 
 test:
 	nbdev_test_nbs

@@ -1,0 +1,114 @@
+name: main
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - ".github/**"
+      - "!.github/workflows/main.yml"
+      - "docs/**"
+      - "*.md"
+      - ".git*"
+
+jobs:
+# clean:
+#   runs-on: ubuntu-latest
+#   timeout-minutes: 5
+#   container:
+#     image: condaforge/mambaforge:4.10.3-10
+#     volumes:
+#       - ${{ github.workspace }}:/github/workspace
+#   steps:
+#     - name: Checkout
+#       uses: actions/checkout@master
+#     - name: Install dependencies
+#       run: mamba install -c fastai -c conda-forge nbdev\<2 nbstripout
+#     - name: Clean notebooks
+#       run: nbdev_clean_nbs
+#     - name: Strip notebook outputs
+#       run: find . -name "*.ipynb" | xargs nbstripout
+#     - name: Check if git status is clean
+#       run: |
+#         if [ ! -z "$(git status --porcelain)" ]; then
+#             echo "Notebooks are not cleaned! They still contain outputs and/or metadata."
+#             echo "You probably forgot to clear the notebook outputs before pushing."
+#             echo "Please make sure all pre-commit hooks are properly installed to prevent this issue."
+#             false;
+#         fi
+
+# diff:
+#   runs-on: ubuntu-latest
+#   timeout-minutes: 5
+#   container:
+#     image: condaforge/mambaforge:4.10.3-10
+#     volumes:
+#       - ${{ github.workspace }}:/github/workspace
+#   steps:
+#     - name: Checkout
+#       uses: actions/checkout@master
+#     - name: Install dependencies
+#       run: mamba install -c fastai -c conda-forge nbdev\<2
+#     - name: Check for no diff between notebooks and library
+#       run: |
+#         if [ ! -z "$(nbdev_diff_nbs)" ]; then
+#             echo "Python library does not match backing notebooks (diff between notebooks and library detected). "
+#             echo "You probably forgot to re-generate the library before pushing."
+#             echo "Please make sure all pre-commit hooks are properly installed to prevent this issue."
+#             false;
+#         fi
+
+  docs:
+#   needs:
+#     - clean
+#     - diff
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    container:
+      image: condaforge/mambaforge:4.10.3-10
+      volumes:
+        - ${{ github.workspace }}:/github/workspace
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Install dependencies
+        run: mamba env update -n base -f environment.yml
+      - name: Create kernel
+        run: python -m ipykernel install --user --name fl
+      - name: Run notebooks
+        run: find source -name "*.ipynb" | grep -v '.ipynb_checkpoints' | xargs -I {} papermill {} {} -k fl
+      - name: Run index.ipynb
+        run: papermill index.ipynb index.ipynb --cwd . --kernel fl
+      - name: Build docs
+        run: nbdev_build_docs
+      - name: Store artifacts
+        uses: actions/upload-artifact@master
+        with:
+          name: docs
+          path: /github/workspace/docs
+
+  pages:
+    needs:
+      - docs
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    container:
+      image: condaforge/mambaforge:4.10.3-10
+      volumes:
+        - ${{ github.workspace }}:/github/workspace
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Install dependencies
+        run: mamba install -c fastai -c conda-forge rsync
+      - name: Download 'docs' artifact
+        uses: actions/download-artifact@master
+        with:
+          name: docs
+          path: /github/workspace/docs
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@4.1.7
+        with:
+          branch: pages
+          folder: docs

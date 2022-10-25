@@ -2,8 +2,8 @@
 
 __all__ = ["index", "modules", "custom_doc_links", "git_url"]
 
-index = {"__version__": "00_index.ipynb",
-         "__author__": "00_index.ipynb",
+index = {"__version__": "index.ipynb",
+         "__author__": "index.ipynb",
          "layer": "01_factories.ipynb",
          "point": "01_factories.ipynb",
          "vector": "01_factories.ipynb",
@@ -81,8 +81,8 @@ modules = ["__init__.py",
            "notebook.py",
            "example_lib.py"]
 
-doc_url = "https://flaport.gitlab.io/flaport/flayout/"
+doc_url = "https://flaport.github.io/flaport/flayout/"
 
-git_url = "https://gitlab.com/flaport/flayout/tree/master/"
+git_url = "https://github.com/flaport/flayout/tree/master/"
 
 def custom_doc_links(name): return None

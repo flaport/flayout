@@ -1,8 +1,8 @@
 topnav:
 - title: Topnav
   items:
-    - title: gitlab
-      external_url: https://gitlab.com/flaport/flayout/
+    - title: github
+      external_url: https://github.com/flaport/flayout/
 
 #Topnav dropdowns
 topnav_dropdowns:
